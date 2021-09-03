@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      var map;
+      var x;
+      var y;
+      function loadmaps(){
+        $.getJSON("https://api.thingspeak.com/channels/1069873/fields/1/last.json?api_key=ZZQI71B73Q3FCOEP", function(result){
+        	
+            var m = result;
+            x=Number(m.field1);
+                           //alert(x);
+
+        });
+        $.getJSON("https://api.thingspeak.com/channels/1069873/fields/2/last.json?api_key=ZZQI71B73Q3FCOEP", function(result){
+        	
+            var m = result;
+            y=Number(m.field2);
+                
+
+        }).done(function() {
+                initMap();
+        });
+            
+        }
+        window.setInterval(function(){loadmaps();}, 9000);
+
+      function initMap() {
+
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: x, lng: y},
+          zoom: 18
+        });
+        var marker = new google.maps.Marker({
+          position: {lat: x, lng: y},
+          map: map
+        });
+
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCBrGzLpkAkbTg4j2ncYS4DXC3afK_bBZw&callback=initMap"
+    async defer></script>
+
+  </body>
+</html>
